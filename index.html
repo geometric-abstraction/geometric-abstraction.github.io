@@ -81,7 +81,7 @@
 <main>
   <section class="wrap teaser">
     <figure class="card">
-      <img src="static/images/teaser.png" alt="Top: repeated visual reasoning sends images to a multimodal LLM at every step. Bottom: with geometric abstraction, visual observations are grounded into geometry exposed as text and symbols such as red.bottom_face and blue.top_face, with evidence status; images are sent only on demand." width="3920" height="1176">
+      <img src="static/images/teaser.svg" alt="Top: repeated visual reasoning sends images to a multimodal LLM at every step. Bottom: with geometric abstraction, visual observations are grounded into geometry exposed as text and symbols such as red.bottom_face and blue.top_face, with evidence status; images are sent only on demand." width="4032" height="1210">
     </figure>
     <p class="tldr"><strong>TL;DR</strong> Keep the cameras on, but stop making the language model re-read images at every step. We ground RGB-D observations into typed, evidence-aware geometric references and compact textual checkpoints, so robot agents can reason and act with fewer model calls and image inputs.</p>
   </section>
@@ -104,7 +104,7 @@
   <section class="wrap" id="method">
     <h2>Method</h2>
     <figure class="card">
-      <img src="static/images/method.png" alt="Pipeline: (a) recorded side RGB-D observation, (b) metric geometry with points, edges and faces, (c) text and symbols such as object center and residual to goal, (d) agentic policy that revises policies or chooses actions, with local skill execution." width="3420" height="1440" loading="lazy">
+      <img src="static/images/method.svg" alt="Pipeline: (a) recorded side RGB-D observation, (b) metric geometry with points, edges and faces, (c) text and symbols such as object center and residual to goal, (d) agentic policy that revises policies or chooses actions, with local skill execution." width="2189" height="922" loading="lazy">
       <figcaption>RGB-D observations are grounded into object geometry and exposed to the LLM through typed symbolic references and compact textual checkpoints. The same interface serves policy synthesis between rollouts and decisions within a continuing online episode.</figcaption>
     </figure>
 
@@ -179,24 +179,24 @@
     <h3 class="sub" id="single-policy">1&nbsp; Single-policy acquisition</h3>
     <p>The LLM revises an executable Python policy between reset rollouts (R0&ndash;R3), with no LLM calls during execution. There are five paired chains per task, and every revision is tested on the same 100 held-out layouts.</p>
     <figure class="card">
-      <img src="static/images/single_policy_workflow.png" alt="Single-policy workflow: LLM revision, Python policy, rollout with reset, feedback; then freeze and held-out evaluation. Tasks: bridge plus cylinder, stacking, ring-on-peg." width="3600" height="1140" loading="lazy">
+      <img src="static/images/single_policy_workflow.svg" alt="Single-policy workflow: LLM revision, Python policy, rollout with reset, feedback; then freeze and held-out evaluation. Tasks: bridge plus cylinder, stacking, ring-on-peg." width="3456" height="1094" loading="lazy">
     </figure>
     <figure class="card">
-      <img src="static/images/single_policy_results.png" alt="Test success rate and cumulative tokens across iterations for bridge plus cylinder, three-cube stacking and ring over peg. Full reaches higher success earlier on the construction tasks and is the only condition to succeed on ring." width="2640" height="869" loading="lazy">
+      <img src="static/images/single_policy_results.svg" alt="Test success rate and cumulative tokens across iterations for bridge plus cylinder, three-cube stacking and ring over peg. Full reaches higher success earlier on the construction tasks and is the only condition to succeed on ring." width="3456" height="1138" loading="lazy">
       <figcaption>Lines show mean held-out success of training-retained policies; bars show cumulative tokens. On the construction tasks, Full's R2 already beats Base's R3 for about half the tokens. On ring-on-peg, only Full succeeds (38% at R3).</figcaption>
     </figure>
 
     <h3 class="sub" id="online">2&nbsp; Continuous online execution</h3>
     <p>The agent observes, reasons and acts in one continuing scene until it succeeds or hits a 200&nbsp;s budget. Failed actions leave their consequences in place, and physics keeps running while the model thinks. We evaluate 50 paired layouts per task (300 episodes).</p>
     <figure class="card">
-      <img src="static/images/online_workflow.png" alt="Online workflow: observe, LLM decision, execute action in the same scene with no reset, until success or 200 second timeout. Tasks: bridge-tower, ring-on-peg, relocation." width="3600" height="1140" loading="lazy">
+      <img src="static/images/online_workflow.svg" alt="Online workflow: observe, LLM decision, execute action in the same scene with no reset, until success or 200 second timeout. Tasks: bridge-tower, ring-on-peg, relocation." width="3456" height="1094" loading="lazy">
     </figure>
     <figure class="card">
-      <img src="static/images/online_outcomes.png" alt="Success within 200 seconds, capped completion time and recorded tokens over 50 paired layouts for bridge-tower, ring and relocation. Full succeeds more often on bridge-tower and relocation and finishes ring faster with far fewer tokens." width="3600" height="1185" loading="lazy">
+      <img src="static/images/online_outcomes.svg" alt="Success within 200 seconds, capped completion time and recorded tokens over 50 paired layouts for bridge-tower, ring and relocation. Full succeeds more often on bridge-tower and relocation and finishes ring faster with far fewer tokens." width="3456" height="1138" loading="lazy">
       <figcaption>Full completes more episodes on Bridge-tower (28/50 vs. 12/50) and Tower relocation (42/50 vs. 15/50). On Ring, both succeed on almost every layout (50/50 vs. 49/50), but Full finishes sooner on 45 of the 50 paired layouts.</figcaption>
     </figure>
     <figure class="card">
-      <img src="static/images/online_cost.png" alt="Model-request time and recorded tokens per episode, with individual episodes as points." width="3240" height="1260" loading="lazy">
+      <img src="static/images/online_cost.svg" alt="Model-request time and recorded tokens per episode, with individual episodes as points." width="3110" height="1210" loading="lazy">
       <figcaption>Model interaction cost per episode. Full attaches fewer images on all three tasks while local sensing keeps refreshing the geometry.</figcaption>
     </figure>
 
