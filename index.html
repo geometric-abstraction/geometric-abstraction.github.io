@@ -24,9 +24,9 @@
     <h1>Do Agentic Policies Need to Look at Every Step?<br><span>Geometric Abstraction for Reasoning and Action</span></h1>
 
     <p class="authors">
-      <a href="mailto:yihang.liu.pc@gmail.com">Yihang Liu</a><sup>1</sup>
-      <a href="mailto:ychen3868@gatech.edu">Yiming Chen</a><sup>2</sup>
-      <a href="mailto:mzhengar@connect.ust.hk">Mingzhe Zheng</a><sup>3</sup>
+      <a href="https://yukarifan.github.io/">Yihang Liu</a><sup>1</sup>
+      <a href="http://yimingchen.net/">Yiming Chen</a><sup>2</sup>
+      <a href="https://mingzhezheng.homes/">Mingzhe Zheng</a><sup>3</sup>
     </p>
     <p class="affiliations">
       <span><sup>1</sup>Independent Researcher</span>
@@ -44,7 +44,7 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
         Code
       </a>
-      <a class="btn" href="#videos">
+      <a class="btn" href="https://github.com/Spectraorder/geometric-abstraction/tree/main/docs/evaluations/videos">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
         Videos
       </a>
@@ -67,16 +67,16 @@
   <section class="wrap stats" aria-label="Headline results on online ring-on-peg">
     <p class="stats-label">Online ring-on-peg, Full vs. Base</p>
     <div class="stat-row">
-      <div class="stat"><span class="num">&minus;38.0%</span><span class="lbl">mean completion time</span></div>
-      <div class="stat"><span class="num">&minus;55.7%</span><span class="lbl">model-request time</span></div>
-      <div class="stat"><span class="num">&minus;60.2%</span><span class="lbl">recorded tokens</span></div>
-      <div class="stat"><span class="num">12.4 &rarr; 2.0</span><span class="lbl">images sent per episode</span></div>
+      <div class="stat"><span class="num">&minus;33.3%</span><span class="lbl">mean completion time</span></div>
+      <div class="stat"><span class="num">&minus;49.4%</span><span class="lbl">model-request time</span></div>
+      <div class="stat"><span class="num">&minus;52.8%</span><span class="lbl">recorded tokens</span></div>
+      <div class="stat"><span class="num">10.9 &rarr; 2.7</span><span class="lbl">images sent per episode</span></div>
     </div>
   </section>
 
   <section class="wrap prose" id="abstract">
     <h2>Abstract</h2>
-    <p>Recent multimodal language models can reason directly about robot scenes, but it is unclear whether they need to repeatedly reinterpret visual observations throughout an interaction. We explore a simple alternative: maintaining task-relevant 3D information as a geometric abstraction that can be updated from current observations and read directly by the language model. Our prototype represents scene geometry through typed, evidence-aware references to object parts, grounds these references locally from RGB-D, and returns compact textual checkpoints after execution. We study this interface in two settings: policy synthesis across rollouts and continuous online execution. The results suggest that such an abstraction can reduce repeated multimodal interaction while retaining useful spatial information for manipulation. In online ring-on-peg, for example, it reduces mean completion time by 38.0%, model-request time by 55.7%, and recorded tokens by 60.2%. We view these results as preliminary evidence that explicit geometric state is a useful design point for agentic robot policies, and discuss when direct visual reasoning remains necessary.</p>
+    <p>Recent multimodal language models can reason directly about robot scenes, but it is unclear whether they need to repeatedly reinterpret visual observations throughout an interaction. We explore a simple alternative: maintaining task-relevant 3D information as a geometric abstraction that can be updated from current observations and read directly by the language model. Our prototype represents scene geometry through typed, evidence-aware references to object parts, grounds these references locally from RGB-D, and returns compact textual checkpoints after execution. We study this interface in two settings: policy synthesis across rollouts and continuous online execution. The results suggest that such an abstraction can reduce repeated multimodal interaction while retaining useful spatial information for manipulation. In online ring-on-peg, for example, it reduces mean completion time by 33.3%, model-request time by 49.4%, and recorded tokens by 52.8%. We view these results as preliminary evidence that explicit geometric state is a useful design point for agentic robot policies, and discuss when direct visual reasoning remains necessary.</p>
   </section>
 
   <section class="wrap" id="method">
@@ -130,30 +130,30 @@
     </figure>
 
     <h3 class="sub">2&nbsp; Continuous online execution</h3>
-    <p>The agent observes, reasons and acts in one continuing scene until it succeeds or hits a 200&nbsp;s budget. Failed actions leave their consequences in place, and physics keeps running while the model thinks.</p>
+    <p>The agent observes, reasons and acts in one continuing scene until it succeeds or hits a 200&nbsp;s budget. Failed actions leave their consequences in place, and physics keeps running while the model thinks. We evaluate 50 paired layouts per task (300 episodes).</p>
     <figure class="card">
       <img src="static/images/online_workflow.png" alt="Online workflow: observe, LLM decision, execute action in the same scene with no reset, until success or 200 second timeout. Tasks: bridge-tower, ring-on-peg, relocation." width="3600" height="1140" loading="lazy">
     </figure>
     <figure class="card">
-      <img src="static/images/online_outcomes.png" alt="Success within 200 seconds, capped completion time and recorded tokens for bridge-tower, ring and relocation. Full succeeds more often on bridge-tower and relocation and finishes ring faster with far fewer tokens." width="2640" height="869" loading="lazy">
-      <figcaption>Full completes more episodes on Bridge-tower (4/5 vs. 2/5) and Relocation (3/5 vs. 2/5). On Ring, both succeed 5/5, but Full finishes sooner on every paired layout.</figcaption>
+      <img src="static/images/online_outcomes.png" alt="Success within 200 seconds, capped completion time and recorded tokens over 50 paired layouts for bridge-tower, ring and relocation. Full succeeds more often on bridge-tower and relocation and finishes ring faster with far fewer tokens." width="3600" height="1185" loading="lazy">
+      <figcaption>Full completes more episodes on Bridge-tower (28/50 vs. 12/50) and Tower relocation (42/50 vs. 15/50). On Ring, both succeed on almost every layout (50/50 vs. 49/50), but Full finishes sooner on 45 of the 50 paired layouts.</figcaption>
     </figure>
     <figure class="card">
-      <img src="static/images/online_cost.png" alt="Model-request time and recorded tokens per episode, with individual episodes as points." width="2376" height="924" loading="lazy">
+      <img src="static/images/online_cost.png" alt="Model-request time and recorded tokens per episode, with individual episodes as points." width="3240" height="1260" loading="lazy">
       <figcaption>Model interaction cost per episode. Full attaches fewer images on all three tasks while local sensing keeps refreshing the geometry.</figcaption>
     </figure>
 
     <div class="table-wrap">
       <table class="num">
-        <caption>Online outcomes and cost (means per episode; timeouts count as 200&nbsp;s)</caption>
+        <caption>Online outcomes and cost over 50 paired layouts per task (means per episode; timeouts count as 200&nbsp;s)</caption>
         <thead><tr><th>Task</th><th>Agent</th><th>Success</th><th>Time (s)</th><th>Model (s)</th><th>Tokens (k)</th><th>Requests</th><th>Images</th></tr></thead>
         <tbody>
-          <tr><td rowspan="2">Bridge-tower</td><td>Base</td><td>2/5</td><td>195.9</td><td>46.2</td><td>101.4</td><td>7.2</td><td>6.6</td></tr>
-          <tr class="full"><td>Full</td><td>4/5</td><td>174.1</td><td>45.7</td><td>107.8</td><td>6.4</td><td>4.0</td></tr>
-          <tr><td rowspan="2">Ring-on-peg</td><td>Base</td><td>5/5</td><td>119.8</td><td>94.4</td><td>233.8</td><td>12.6</td><td>12.4</td></tr>
-          <tr class="full"><td>Full</td><td>5/5</td><td>74.2</td><td>41.8</td><td>93.0</td><td>6.6</td><td>2.0</td></tr>
-          <tr><td rowspan="2">Tower relocation</td><td>Base</td><td>2/5</td><td>190.6</td><td>80.0</td><td>181.4</td><td>11.4</td><td>11.0</td></tr>
-          <tr class="full"><td>Full</td><td>3/5</td><td>164.3</td><td>50.6</td><td>151.2</td><td>8.2</td><td>4.0</td></tr>
+          <tr><td rowspan="2">Bridge-tower</td><td>Base</td><td>12/50</td><td>198.0</td><td>55.5</td><td>112.5</td><td>7.88</td><td>7.50</td></tr>
+          <tr class="full"><td>Full</td><td>28/50</td><td>185.3</td><td>51.8</td><td>129.5</td><td>7.32</td><td>4.28</td></tr>
+          <tr><td rowspan="2">Ring-on-peg</td><td>Base</td><td>49/50</td><td>115.8</td><td>90.0</td><td>214.5</td><td>11.88</td><td>10.94</td></tr>
+          <tr class="full"><td>Full</td><td>50/50</td><td>77.2</td><td>45.6</td><td>101.3</td><td>6.90</td><td>2.72</td></tr>
+          <tr><td rowspan="2">Tower relocation</td><td>Base</td><td>15/50</td><td>186.4</td><td>80.3</td><td>185.9</td><td>11.58</td><td>11.34</td></tr>
+          <tr class="full"><td>Full</td><td>42/50</td><td>139.2</td><td>31.7</td><td>88.3</td><td>5.36</td><td>3.00</td></tr>
         </tbody>
       </table>
     </div>
@@ -176,8 +176,8 @@
     <h2>Takeaways and limitations</h2>
     <ul>
       <li><strong>Vision stays on, re-reading goes down.</strong> Local perception keeps the geometric state current, so the language model rarely needs a fresh image to decide.</li>
-      <li><strong>Gains are task-dependent.</strong> Ring and Relocation save model time and tokens; Bridge-tower's gain comes from better action choices despite 6.3% more tokens.</li>
-      <li><strong>Scope is preliminary.</strong> These are simulated tasks with simple object geometry and five paired online layouts. Real-world depth noise, occlusion and calibration error remain open, and we compare the full geometry-plus-feedback package rather than isolating its parts.</li>
+      <li><strong>Gains are task-dependent.</strong> Ring and Tower relocation roughly halve model time and tokens. Bridge-tower's higher success comes with 15.1% more tokens, so better completion does not require token savings on every task.</li>
+      <li><strong>Scope is preliminary.</strong> These are simulated tasks with relatively simple object geometry. Real-world depth noise, occlusion and calibration error remain open, and we compare the full geometry-plus-feedback package rather than isolating its parts.</li>
       <li><strong>Looking ahead.</strong> Exposing grounded geometry as text could let fast text-only LLMs reason about physical scenes, and open a cleaner way to measure LLM spatial reasoning on verified geometric inputs.</li>
     </ul>
   </section>
