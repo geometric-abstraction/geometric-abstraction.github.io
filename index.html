@@ -25,9 +25,9 @@
     <h1>Do Agentic Policies Need to Look at Every Step?<br><span>Geometric Abstraction for Reasoning and Action</span></h1>
 
     <p class="authors">
-      <a href="https://yukarifan.github.io/">Yihang Liu</a><sup>1</sup>
-      <a href="http://yimingchen.net/">Yiming Chen</a><sup>2</sup>
-      <a href="https://mingzhezheng.homes/">Mingzhe Zheng</a><sup>3</sup>
+      <span class="author"><a href="https://yukarifan.github.io/">Yihang Liu</a><sup>1</sup></span>
+      <span class="author"><a href="http://yimingchen.net/">Yiming Chen</a><sup>2</sup></span>
+      <span class="author"><a href="https://mingzhezheng.homes/">Mingzhe Zheng</a><sup>3</sup></span>
     </p>
     <p class="affiliations">
       <span><sup>1</sup>Independent Researcher</span>
@@ -60,6 +60,23 @@
     </nav>
   </div>
 </header>
+
+<nav class="toc" aria-label="Contents">
+  <button type="button" class="toc-toggle" aria-expanded="false" aria-controls="toc-panel">CONTENTS</button>
+  <div class="toc-panel" id="toc-panel">
+    <ol>
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#tasks">Tasks</a></li>
+      <li><a href="#results">Experiments</a></li>
+      <li class="sub"><a href="#single-policy">Single-policy</a></li>
+      <li class="sub"><a href="#online">Online execution</a></li>
+      <li><a href="#videos">Rollouts</a></li>
+      <li><a href="#discussion">Takeaways</a></li>
+      <li><a href="#citation">Citation</a></li>
+    </ol>
+  </div>
+</nav>
 
 <main>
   <section class="wrap teaser">
@@ -159,7 +176,7 @@
     <h2>Experiments</h2>
     <p class="lede">A simulated SO-100 arm with calibrated side and wrist RGB-D cameras. <strong>Base</strong> and <strong>Full</strong> agents share the task specification, sensors, actuator and initial skills. Full additionally receives the geometric abstraction. Neither ever sees simulator object poses or evaluator state.</p>
 
-    <h3 class="sub">1&nbsp; Single-policy acquisition</h3>
+    <h3 class="sub" id="single-policy">1&nbsp; Single-policy acquisition</h3>
     <p>The LLM revises an executable Python policy between reset rollouts (R0&ndash;R3), with no LLM calls during execution. There are five paired chains per task, and every revision is tested on the same 100 held-out layouts.</p>
     <figure class="card">
       <img src="static/images/single_policy_workflow.png" alt="Single-policy workflow: LLM revision, Python policy, rollout with reset, feedback; then freeze and held-out evaluation. Tasks: bridge plus cylinder, stacking, ring-on-peg." width="3600" height="1140" loading="lazy">
@@ -169,7 +186,7 @@
       <figcaption>Lines show mean held-out success of training-retained policies; bars show cumulative tokens. On the construction tasks, Full's R2 already beats Base's R3 for about half the tokens. On ring-on-peg, only Full succeeds (38% at R3).</figcaption>
     </figure>
 
-    <h3 class="sub">2&nbsp; Continuous online execution</h3>
+    <h3 class="sub" id="online">2&nbsp; Continuous online execution</h3>
     <p>The agent observes, reasons and acts in one continuing scene until it succeeds or hits a 200&nbsp;s budget. Failed actions leave their consequences in place, and physics keeps running while the model thinks. We evaluate 50 paired layouts per task (300 episodes).</p>
     <figure class="card">
       <img src="static/images/online_workflow.png" alt="Online workflow: observe, LLM decision, execute action in the same scene with no reset, until success or 200 second timeout. Tasks: bridge-tower, ring-on-peg, relocation." width="3600" height="1140" loading="lazy">
@@ -274,6 +291,30 @@
     }
     setTimeout(() => { button.textContent = 'Copy'; }, 1800);
   });
+
+  // Table of contents: collapsible tab on narrow screens, current-section highlight.
+  const toc = document.querySelector('.toc');
+  const tocToggle = toc.querySelector('.toc-toggle');
+  const setTocOpen = (open) => {
+    toc.classList.toggle('open', open);
+    tocToggle.setAttribute('aria-expanded', String(open));
+  };
+  tocToggle.addEventListener('click', () => setTocOpen(!toc.classList.contains('open')));
+  toc.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setTocOpen(false)));
+  document.addEventListener('click', (event) => { if (!toc.contains(event.target)) setTocOpen(false); });
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setTocOpen(false); });
+
+  const tocLinks = [...toc.querySelectorAll('a')];
+  const targets = tocLinks.map((link) => document.querySelector(link.getAttribute('href')));
+  const highlight = () => {
+    const line = window.innerHeight * 0.3;
+    let current = 0;
+    targets.forEach((target, i) => { if (target.getBoundingClientRect().top <= line) current = i; });
+    tocLinks.forEach((link, i) => link.classList.toggle('active', i === current));
+  };
+  window.addEventListener('scroll', highlight, { passive: true });
+  window.addEventListener('resize', highlight);
+  highlight();
 </script>
 </body>
 </html>
