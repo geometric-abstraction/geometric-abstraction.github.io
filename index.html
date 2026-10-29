@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geometric Abstraction for Reasoning and Action</title>
+  <meta name="description" content="Do Agentic Policies Need to Look at Every Step? Geometric abstraction lets robot agents reason and act with fewer model calls and image inputs while keeping visual sensing active. CoRL 2026 Workshop on Agentic Robotics.">
+  <meta property="og:title" content="Do Agentic Policies Need to Look at Every Step? Geometric Abstraction for Reasoning and Action">
+  <meta property="og:description" content="Geometric abstraction lets robot agents reason and act with fewer model calls and image inputs while keeping visual sensing active.">
+  <meta property="og:image" content="https://geometric-abstraction.github.io/static/images/teaser.png">
+  <meta property="og:url" content="https://geometric-abstraction.github.io/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 3 28 10v12L16 29 4 22V10z' fill='%23e8f1f0' stroke='%231f6b6b' stroke-width='2'/><path d='M4 10l12 7 12-7M16 17v12' fill='none' stroke='%231f6b6b' stroke-width='2'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="venue">CoRL 2026 Workshop on Agentic Robotics &middot; Poster</p>
+    <h1>Do Agentic Policies Need to Look at Every Step?<br><span>Geometric Abstraction for Reasoning and Action</span></h1>
+
+    <p class="authors">
+      <a href="mailto:yihang.liu.pc@gmail.com">Yihang Liu</a><sup>1</sup>
+      <a href="mailto:ychen3868@gatech.edu">Yiming Chen</a><sup>2</sup>
+      <a href="mailto:mzhengar@connect.ust.hk">Mingzhe Zheng</a><sup>3</sup>
+    </p>
+    <p class="affiliations">
+      <span><sup>1</sup>Independent Researcher</span>
+      <span><sup>2</sup>Georgia Institute of Technology</span>
+      <span><sup>3</sup>The Hong Kong University of Science and Technology</span>
+    </p>
+
+    <nav class="links" aria-label="Paper links">
+      <!-- TODO: add static/pdf/paper.pdf (camera-ready) -->
+      <a class="btn" href="static/pdf/paper.pdf">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
+        Paper
+      </a>
+      <!-- TODO: replace with the OpenReview forum URL -->
+      <a class="btn" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h4"/></svg>
+        OpenReview
+      </a>
+      <a class="btn" href="https://github.com/Spectraorder/geometric-abstraction">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+        Code
+      </a>
+      <a class="btn" href="#videos">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
+        Videos
+      </a>
+      <a class="btn" href="#citation">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h4v4H8a3 3 0 0 0 3 3v2a5 5 0 0 1-5-5zm7 0h4v4h-3a3 3 0 0 0 3 3v2a5 5 0 0 1-5-5z"/></svg>
+        BibTeX
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="wrap teaser">
+    <figure class="card">
+      <img src="static/images/teaser.png" alt="Top: repeated visual reasoning sends images to a multimodal LLM at every step. Bottom: with geometric abstraction, visual observations are grounded into geometry exposed as text and symbols such as red.bottom_face and blue.top_face, with evidence status; images are sent only on demand." width="3920" height="1176">
+    </figure>
+    <p class="tldr"><strong>TL;DR</strong> Keep the cameras on, but stop making the language model re-read images at every step. We ground RGB-D observations into typed, evidence-aware geometric references and compact textual checkpoints, so robot agents can reason and act with fewer model calls and image inputs.</p>
+  </section>
+
+  <section class="wrap stats" aria-label="Headline results on online ring-on-peg">
+    <p class="stats-label">Online ring-on-peg, Full vs. Base</p>
+    <div class="stat-row">
+      <div class="stat"><span class="num">&minus;38.0%</span><span class="lbl">mean completion time</span></div>
+      <div class="stat"><span class="num">&minus;55.7%</span><span class="lbl">model-request time</span></div>
+      <div class="stat"><span class="num">&minus;60.2%</span><span class="lbl">recorded tokens</span></div>
+      <div class="stat"><span class="num">12.4 &rarr; 2.0</span><span class="lbl">images sent per episode</span></div>
+    </div>
+  </section>
+
+  <section class="wrap prose" id="abstract">
+    <h2>Abstract</h2>
+    <p>Recent multimodal language models can reason directly about robot scenes, but it is unclear whether they need to repeatedly reinterpret visual observations throughout an interaction. We explore a simple alternative: maintaining task-relevant 3D information as a geometric abstraction that can be updated from current observations and read directly by the language model. Our prototype represents scene geometry through typed, evidence-aware references to object parts, grounds these references locally from RGB-D, and returns compact textual checkpoints after execution. We study this interface in two settings: policy synthesis across rollouts and continuous online execution. The results suggest that such an abstraction can reduce repeated multimodal interaction while retaining useful spatial information for manipulation. In online ring-on-peg, for example, it reduces mean completion time by 38.0%, model-request time by 55.7%, and recorded tokens by 60.2%. We view these results as preliminary evidence that explicit geometric state is a useful design point for agentic robot policies, and discuss when direct visual reasoning remains necessary.</p>
+  </section>
+
+  <section class="wrap" id="method">
+    <h2>Method</h2>
+    <figure class="card">
+      <img src="static/images/method.png" alt="Pipeline: (a) recorded side RGB-D observation, (b) metric geometry with points, edges and faces, (c) text and symbols such as object center and residual to goal, (d) agentic policy that revises policies or chooses actions, with local skill execution." width="3420" height="1440" loading="lazy">
+      <figcaption>RGB-D observations are grounded into object geometry and exposed to the LLM through typed symbolic references and compact textual checkpoints. The same interface serves policy synthesis between rollouts and decisions within a continuing online episode.</figcaption>
+    </figure>
+
+    <div class="pillars">
+      <article>
+        <h3>Ground locally</h3>
+        <p>Calibrated side and wrist RGB-D are back-projected into the world frame to estimate each object's center, orientation, faces, edges and vertices. All of this runs on the CPU. <em>Shape may persist, but pose must be refreshed</em> from a current observation, never copied from a commanded motion.</p>
+      </article>
+      <article>
+        <h3>Reference symbolically</h3>
+        <p>Policies refer to typed parts like <code>red.bottom_face</code> and <code>blue.top_face</code>. Every value carries its evidence status: <span class="tag obs">observed</span> <span class="tag inf">inferred</span> <span class="tag una">unavailable</span>. The same program rebinds to new scenes.</p>
+      </article>
+      <article>
+        <h3>Checkpoint in text</h3>
+        <p>After each action the agent receives a compact checkpoint with the current geometry, its evidence, and the residual to the goal. Images stay available on demand when the geometry cannot explain a failure.</p>
+      </article>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Operators on the geometric state</caption>
+        <thead><tr><th>Operation</th><th>Inputs</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><td><code>reference</code></td><td>object and role</td><td>geometric entity with evidence</td></tr>
+          <tr><td><code>relation</code></td><td>predicate and objects</td><td>residuals and <code>true</code>/<code>false</code>/<code>unknown</code></td></tr>
+          <tr><td><code>align</code></td><td>source and target geometry</td><td>desired rigid transform</td></tr>
+          <tr><td><code>checkpoint</code></td><td>active object and goal</td><td>compact textual state</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="wrap" id="results">
+    <h2>Experiments</h2>
+    <p class="lede">A simulated SO-100 arm with calibrated side and wrist RGB-D cameras. <strong>Base</strong> and <strong>Full</strong> agents share the task specification, sensors, actuator and initial skills. Full additionally receives the geometric abstraction. Neither ever sees simulator object poses or evaluator state.</p>
+
+    <h3 class="sub">1&nbsp; Single-policy acquisition</h3>
+    <p>The LLM revises an executable Python policy between reset rollouts (R0&ndash;R3), with no LLM calls during execution. There are five paired chains per task, and every revision is tested on the same 100 held-out layouts.</p>
+    <figure class="card">
+      <img src="static/images/single_policy_workflow.png" alt="Single-policy workflow: LLM revision, Python policy, rollout with reset, feedback; then freeze and held-out evaluation. Tasks: bridge plus cylinder, stacking, ring-on-peg." width="3600" height="1140" loading="lazy">
+    </figure>
+    <figure class="card">
+      <img src="static/images/single_policy_results.png" alt="Test success rate and cumulative tokens across iterations for bridge plus cylinder, three-cube stacking and ring over peg. Full reaches higher success earlier on the construction tasks and is the only condition to succeed on ring." width="2640" height="869" loading="lazy">
+      <figcaption>Lines show mean held-out success of training-retained policies; bars show cumulative tokens. On the construction tasks, Full's R2 already beats Base's R3 for about half the tokens. On ring-on-peg, only Full succeeds (38% at R3).</figcaption>
+    </figure>
+
+    <h3 class="sub">2&nbsp; Continuous online execution</h3>
+    <p>The agent observes, reasons and acts in one continuing scene until it succeeds or hits a 200&nbsp;s budget. Failed actions leave their consequences in place, and physics keeps running while the model thinks.</p>
+    <figure class="card">
+      <img src="static/images/online_workflow.png" alt="Online workflow: observe, LLM decision, execute action in the same scene with no reset, until success or 200 second timeout. Tasks: bridge-tower, ring-on-peg, relocation." width="3600" height="1140" loading="lazy">
+    </figure>
+    <figure class="card">
+      <img src="static/images/online_outcomes.png" alt="Success within 200 seconds, capped completion time and recorded tokens for bridge-tower, ring and relocation. Full succeeds more often on bridge-tower and relocation and finishes ring faster with far fewer tokens." width="2640" height="869" loading="lazy">
+      <figcaption>Full completes more episodes on Bridge-tower (4/5 vs. 2/5) and Relocation (3/5 vs. 2/5). On Ring, both succeed 5/5, but Full finishes sooner on every paired layout.</figcaption>
+    </figure>
+    <figure class="card">
+      <img src="static/images/online_cost.png" alt="Model-request time and recorded tokens per episode, with individual episodes as points." width="2376" height="924" loading="lazy">
+      <figcaption>Model interaction cost per episode. Full attaches fewer images on all three tasks while local sensing keeps refreshing the geometry.</figcaption>
+    </figure>
+
+    <div class="table-wrap">
+      <table class="num">
+        <caption>Online outcomes and cost (means per episode; timeouts count as 200&nbsp;s)</caption>
+        <thead><tr><th>Task</th><th>Agent</th><th>Success</th><th>Time (s)</th><th>Model (s)</th><th>Tokens (k)</th><th>Requests</th><th>Images</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="2">Bridge-tower</td><td>Base</td><td>2/5</td><td>195.9</td><td>46.2</td><td>101.4</td><td>7.2</td><td>6.6</td></tr>
+          <tr class="full"><td>Full</td><td>4/5</td><td>174.1</td><td>45.7</td><td>107.8</td><td>6.4</td><td>4.0</td></tr>
+          <tr><td rowspan="2">Ring-on-peg</td><td>Base</td><td>5/5</td><td>119.8</td><td>94.4</td><td>233.8</td><td>12.6</td><td>12.4</td></tr>
+          <tr class="full"><td>Full</td><td>5/5</td><td>74.2</td><td>41.8</td><td>93.0</td><td>6.6</td><td>2.0</td></tr>
+          <tr><td rowspan="2">Tower relocation</td><td>Base</td><td>2/5</td><td>190.6</td><td>80.0</td><td>181.4</td><td>11.4</td><td>11.0</td></tr>
+          <tr class="full"><td>Full</td><td>3/5</td><td>164.3</td><td>50.6</td><td>151.2</td><td>8.2</td><td>4.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="wrap" id="videos">
+    <h2>Rollouts</h2>
+    <p class="lede">Successful Full examples from each study. These are <em>sparse replays of archived camera observations</em>, not continuous recordings, so playback speed does not reflect real time. The result tables include every success and failure.</p>
+    <div class="video-grid">
+      <figure><video src="static/videos/single_policy_bridge.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Single-policy</b> &middot; Bridge + cylinder</figcaption></figure>
+      <figure><video src="static/videos/single_policy_stacking.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Single-policy</b> &middot; Three-cube stacking</figcaption></figure>
+      <figure><video src="static/videos/single_policy_ring.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Single-policy</b> &middot; Ring-on-peg</figcaption></figure>
+      <figure><video src="static/videos/online_tower.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Online</b> &middot; Bridge-tower</figcaption></figure>
+      <figure><video src="static/videos/online_ring.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Online</b> &middot; Ring-on-peg</figcaption></figure>
+      <figure><video src="static/videos/online_relocation.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Online</b> &middot; Tower relocation</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="wrap prose" id="discussion">
+    <h2>Takeaways and limitations</h2>
+    <ul>
+      <li><strong>Vision stays on, re-reading goes down.</strong> Local perception keeps the geometric state current, so the language model rarely needs a fresh image to decide.</li>
+      <li><strong>Gains are task-dependent.</strong> Ring and Relocation save model time and tokens; Bridge-tower's gain comes from better action choices despite 6.3% more tokens.</li>
+      <li><strong>Scope is preliminary.</strong> These are simulated tasks with simple object geometry and five paired online layouts. Real-world depth noise, occlusion and calibration error remain open, and we compare the full geometry-plus-feedback package rather than isolating its parts.</li>
+      <li><strong>Looking ahead.</strong> Exposing grounded geometry as text could let fast text-only LLMs reason about physical scenes, and open a cleaner way to measure LLM spatial reasoning on verified geometric inputs.</li>
+    </ul>
+  </section>
+
+  <section class="wrap" id="citation">
+    <h2>Citation</h2>
+    <div class="bibtex">
+      <button type="button" class="copy" aria-label="Copy BibTeX">Copy</button>
+<pre><code id="bibtex">@inproceedings{liu2026geometric,
+  title     = {Do Agentic Policies Need to Look at Every Step? Geometric Abstraction for Reasoning and Action},
+  author    = {Liu, Yihang and Chen, Yiming and Zheng, Mingzhe},
+  booktitle = {CoRL 2026 Workshop on Agentic Robotics},
+  year      = {2026}
+}</code></pre>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Code released under the MIT License on <a href="https://github.com/Spectraorder/geometric-abstraction">GitHub</a>. Paper licensed under CC BY 4.0.</p>
+  </div>
+</footer>
+
+<script>
+  document.querySelector('.copy').addEventListener('click', async (event) => {
+    const button = event.currentTarget;
+    try {
+      await navigator.clipboard.writeText(document.getElementById('bibtex').textContent);
+      button.textContent = 'Copied';
+    } catch {
+      button.textContent = 'Select & copy';
+    }
+    setTimeout(() => { button.textContent = 'Copy'; }, 1800);
+  });
+</script>
+</body>
+</html>
