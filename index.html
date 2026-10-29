@@ -239,14 +239,18 @@
 
   <section class="wrap" id="videos">
     <h2>Rollouts</h2>
-    <p class="lede">Successful Full examples from each study. These are <em>sparse replays of archived camera observations</em>, not continuous recordings, so playback speed does not reflect real time. The result tables include every success and failure.</p>
+    <p class="lede">Continuous demo rollouts of each task in the same simulated SO-100 setup, recorded for this page. They show the physical tasks, not the study's LLM agents: single-policy tasks use hand-written controllers from the repository, and the online tasks use scripted controllers. The result tables above report the actual study episodes. Sparse replays of real study episodes are in the <a href="https://github.com/Spectraorder/geometric-abstraction/tree/main/docs/evaluations/videos">code repository</a>.</p>
+    <p class="group-label">Single-policy tasks</p>
     <div class="video-grid">
-      <figure><video src="static/videos/single_policy_bridge.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Single-policy</b> &middot; Bridge + cylinder</figcaption></figure>
-      <figure><video src="static/videos/single_policy_stacking.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Single-policy</b> &middot; Three-cube stacking</figcaption></figure>
-      <figure><video src="static/videos/single_policy_ring.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Single-policy</b> &middot; Ring-on-peg</figcaption></figure>
-      <figure><video src="static/videos/online_tower.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Online</b> &middot; Bridge-tower</figcaption></figure>
-      <figure><video src="static/videos/online_ring.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Online</b> &middot; Ring-on-peg</figcaption></figure>
-      <figure><video src="static/videos/online_relocation.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Online</b> &middot; Tower relocation</figcaption></figure>
+      <figure><video src="static/videos/single_policy_bridge.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Bridge + cylinder</b> &middot; 3&times; speed</figcaption></figure>
+      <figure><video src="static/videos/single_policy_stacking.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Three-cube stacking</b> &middot; 3&times; speed</figcaption></figure>
+      <figure><video src="static/videos/single_policy_ring.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Ring-on-peg</b> &middot; real time</figcaption></figure>
+    </div>
+    <p class="group-label">Online tasks</p>
+    <div class="video-grid">
+      <figure><video src="static/videos/online_tower.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Bridge-tower</b> &middot; 4&times; speed</figcaption></figure>
+      <figure><video src="static/videos/online_ring.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Ring-on-peg</b> &middot; real time</figcaption></figure>
+      <figure><video src="static/videos/online_relocation.mp4" controls muted loop playsinline preload="metadata"></video><figcaption><b>Tower relocation</b> &middot; 2&times; speed</figcaption></figure>
     </div>
   </section>
 
@@ -291,6 +295,15 @@
     }
     setTimeout(() => { button.textContent = 'Copy'; }, 1800);
   });
+
+  // Play rollout videos only while they are on screen.
+  const videoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(({ target, isIntersecting }) => {
+      if (isIntersecting) target.play().catch(() => {});
+      else target.pause();
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.video-grid video').forEach((video) => videoObserver.observe(video));
 
   // Table of contents: collapsible tab on narrow screens, current-section highlight.
   const toc = document.querySelector('.toc');
