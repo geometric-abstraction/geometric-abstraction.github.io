@@ -129,6 +129,17 @@ sup { font-size: 0.65em; color: var(--muted); }
 
 .btn:hover { background: var(--teal); transform: translateY(-1px); }
 
+.btn.soon {
+  background: var(--wash);
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  cursor: default;
+}
+
+.btn.soon:hover { background: var(--wash); transform: none; }
+
+.btn.soon small { font-size: 12px; font-weight: 500; }
+
 .btn svg {
   width: 18px;
   height: 18px;
