@@ -20,6 +20,7 @@
 
 <header class="hero">
   <div class="wrap">
+    <img class="corl-logo" src="static/images/logos/corl.png" alt="CoRL" width="983" height="491">
     <p class="venue">CoRL 2026 Workshop on Agentic Robotics &middot; Poster</p>
     <h1>Do Agentic Policies Need to Look at Every Step?<br><span>Geometric Abstraction for Reasoning and Action</span></h1>
 
@@ -33,6 +34,10 @@
       <span><sup>2</sup>Georgia Institute of Technology</span>
       <span><sup>3</sup>The Hong Kong University of Science and Technology</span>
     </p>
+    <div class="logos">
+      <img src="static/images/logos/gatech.png" alt="Georgia Institute of Technology" width="2571" height="666">
+      <img src="static/images/logos/hkust.png" alt="The Hong Kong University of Science and Technology" width="2308" height="725">
+    </div>
 
     <nav class="links" aria-label="Paper links">
       <!-- TODO: add static/pdf/paper.pdf (camera-ready) -->
@@ -115,6 +120,41 @@
     </div>
   </section>
 
+  <section class="wrap" id="tasks">
+    <h2>Tasks</h2>
+    <p class="lede">A simulated SO-100 arm builds and inserts with simple rigid objects. Each card shows a start and goal configuration. These are constructed renderings, not recorded policy trajectories.</p>
+    <p class="group-label">Single-policy acquisition</p>
+    <div class="task-grid">
+      <figure class="task">
+        <div class="pair"><img src="static/images/tasks/bridge_start.jpg" alt="Bridge + cylinder start: blue and yellow cubes, green beam and red cylinder scattered on the table" width="498" height="374" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/bridge_goal.jpg" alt="Bridge + cylinder goal: green beam spans the two cubes with the red cylinder standing on top" width="499" height="373" loading="lazy"></div>
+        <figcaption>Bridge + cylinder</figcaption>
+      </figure>
+      <figure class="task">
+        <div class="pair"><img src="static/images/tasks/stacking_start.jpg" alt="Stacking start: blue, green and red cubes apart" width="498" height="374" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/stacking_goal.jpg" alt="Stacking goal: blue, red, green cubes stacked in order" width="499" height="373" loading="lazy"></div>
+        <figcaption>Three-cube stacking</figcaption>
+      </figure>
+      <figure class="task">
+        <div class="pair"><img src="static/images/tasks/ring_single_start.jpg" alt="Ring-on-peg start: yellow hexagonal ring and blue peg" width="498" height="374" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/ring_single_goal.jpg" alt="Ring-on-peg goal: ring placed over the peg" width="499" height="373" loading="lazy"></div>
+        <figcaption>Ring-on-peg</figcaption>
+      </figure>
+    </div>
+    <p class="group-label">Continuous online execution</p>
+    <div class="task-grid">
+      <figure class="task">
+        <div class="pair"><img src="static/images/tasks/bridge_tower_start.jpg" alt="Bridge-tower start: five cubes and a yellow beam scattered" width="499" height="373" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/bridge_tower_goal.jpg" alt="Bridge-tower goal: beam across two cubes with two cubes stacked on top" width="499" height="373" loading="lazy"></div>
+        <figcaption>Bridge-tower</figcaption>
+      </figure>
+      <figure class="task">
+        <div class="pair"><img src="static/images/tasks/ring_online_start.jpg" alt="Online ring-on-peg start: ring held above the table after the shared lift, next to the peg" width="499" height="373" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/ring_online_goal.jpg" alt="Online ring-on-peg goal: ring released over the peg" width="499" height="373" loading="lazy"></div>
+        <figcaption>Ring-on-peg <span>(after shared lift)</span></figcaption>
+      </figure>
+      <figure class="task">
+        <div class="pair"><img src="static/images/tasks/relocation_start.jpg" alt="Tower relocation start: a red, blue, green column beside a yellow foundation cube" width="499" height="373" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/relocation_goal.jpg" alt="Tower relocation goal: blue and green cubes moved onto the yellow foundation in order" width="499" height="373" loading="lazy"></div>
+        <figcaption>Tower relocation</figcaption>
+      </figure>
+    </div>
+  </section>
+
   <section class="wrap" id="results">
     <h2>Experiments</h2>
     <p class="lede">A simulated SO-100 arm with calibrated side and wrist RGB-D cameras. <strong>Base</strong> and <strong>Full</strong> agents share the task specification, sensors, actuator and initial skills. Full additionally receives the geometric abstraction. Neither ever sees simulator object poses or evaluator state.</p>
@@ -141,6 +181,27 @@
     <figure class="card">
       <img src="static/images/online_cost.png" alt="Model-request time and recorded tokens per episode, with individual episodes as points." width="3240" height="1260" loading="lazy">
       <figcaption>Model interaction cost per episode. Full attaches fewer images on all three tasks while local sensing keeps refreshing the geometry.</figcaption>
+    </figure>
+
+    <figure class="card timeline" aria-labelledby="timeline-title">
+      <p class="timeline-title" id="timeline-title">Inside an average tower-relocation episode</p>
+      <div class="legend" aria-hidden="true"><span><i class="tick img"></i>LLM request with image</span><span><i class="tick txt"></i>LLM request, text only</span></div>
+      <div class="lane">
+        <div class="lane-label"><b>Base</b><span>186.4 s &middot; 11.6 req &middot; 11.3 img</span></div>
+        <div class="track" role="img" aria-label="Base: about 12 LLM requests, almost all with images, over a mean 186.4 seconds">
+          <div class="bar base" style="width:93.2%"></div>
+          <i class="tick img" style="left:3.88%"></i><i class="tick img" style="left:11.65%"></i><i class="tick img" style="left:19.42%"></i><i class="tick img" style="left:27.18%"></i><i class="tick img" style="left:34.95%"></i><i class="tick img" style="left:42.72%"></i><i class="tick img" style="left:50.48%"></i><i class="tick img" style="left:58.25%"></i><i class="tick img" style="left:66.02%"></i><i class="tick img" style="left:73.78%"></i><i class="tick img" style="left:81.55%"></i><i class="tick txt" style="left:89.32%"></i>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="lane-label"><b>Full</b><span>139.2 s &middot; 5.4 req &middot; 3.0 img</span></div>
+        <div class="track" role="img" aria-label="Full: about 5 LLM requests, 3 with images, over a mean 139.2 seconds">
+          <div class="bar full" style="width:69.6%"></div>
+          <i class="tick img" style="left:6.96%"></i><i class="tick txt" style="left:20.88%"></i><i class="tick img" style="left:34.8%"></i><i class="tick txt" style="left:48.72%"></i><i class="tick img" style="left:62.64%"></i>
+        </div>
+      </div>
+      <div class="axis" aria-hidden="true"><span>0 s</span><span>50 s</span><span>100 s</span><span>150 s</span><span>200 s</span></div>
+      <figcaption>Bars end at mean capped completion time (timeouts = 200&nbsp;s); requests are rounded and evenly spaced for illustration. Means over 50 episodes per agent.</figcaption>
     </figure>
 
     <div class="table-wrap">
