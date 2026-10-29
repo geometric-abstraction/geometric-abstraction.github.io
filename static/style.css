@@ -501,12 +501,13 @@ footer p { margin: 0; }
 }
 
 /* Floating table of contents */
+/* Wide screens: sits in the gutter, 40px left of the 1000px content column */
 .toc {
   position: fixed;
-  top: 50%;
-  left: 20px;
+  top: 18vh;
+  right: calc(50% + 540px);
   z-index: 20;
-  transform: translateY(-50%);
+  width: 160px;
   font-size: 14px;
 }
 
@@ -542,7 +543,7 @@ footer p { margin: 0; }
 
 /* Not enough side room for a fixed list: collapse to an edge tab */
 @media (max-width: 1399px) {
-  .toc { left: 0; }
+  .toc { top: 50%; right: auto; left: 0; width: auto; transform: translateY(-50%); }
 
   .toc-toggle {
     display: block;
