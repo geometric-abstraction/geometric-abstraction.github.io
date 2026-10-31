@@ -304,8 +304,10 @@ table.num td:nth-child(n+3), table.num th:nth-child(n+3) {
 
 table.num tr.full td:nth-child(n+2) { text-align: right; }
 table.num tr.full td:first-child { text-align: left; }
-table.num tr.full { background: var(--teal-soft); font-weight: 600; }
-table.num tr.full td:first-child { color: var(--teal); }
+table.num tr.full { background: var(--teal-soft); }
+table.num tr.full td:first-child { color: var(--teal); font-weight: 600; }
+/* Bold only the cells where geometric abstraction does better. */
+table.num td.best { font-weight: 600; }
 table.num td[rowspan] { vertical-align: middle; font-weight: 600; background: #fff; }
 
 /* Videos */
