@@ -83,7 +83,7 @@
   </section>
 
   <section class="wrap stats" aria-label="Headline results on online ring-on-peg">
-    <p class="stats-label">Online ring-on-peg, Full vs. Base</p>
+    <p class="stats-label">Online ring-on-peg, geometric abstraction vs. pixel reasoning</p>
     <div class="stat-row">
       <div class="stat"><span class="num">&minus;33.3%</span><span class="lbl">mean completion time</span></div>
       <div class="stat"><span class="num">&minus;49.4%</span><span class="lbl">model-request time</span></div>
@@ -170,7 +170,7 @@
 
   <section class="wrap" id="results">
     <h2>Experiments</h2>
-    <p class="lede">A simulated SO-100 arm with calibrated side and wrist RGB-D cameras. <strong>Base</strong> and <strong>Full</strong> agents share the task specification, sensors, actuator and initial skills. Full additionally receives the geometric abstraction. Neither ever sees simulator object poses or evaluator state.</p>
+    <p class="lede">A simulated SO-100 arm with calibrated side and wrist RGB-D cameras. The <strong>pixel reasoning</strong> and <strong>geometric abstraction</strong> agents share the task specification, sensors, actuator and initial skills. Pixel reasoning works from the camera images; geometric abstraction additionally receives grounded geometric references and textual checkpoints. Neither ever sees simulator object poses or evaluator state.</p>
 
     <h3 class="sub" id="single-policy">1&nbsp; Single-policy acquisition</h3>
     <p>The LLM revises an executable Python policy between reset rollouts (R0&ndash;R3), with no LLM calls during execution. There are five paired chains per task, and every revision is tested on the same 100 held-out layouts.</p>
@@ -178,8 +178,8 @@
       <img src="static/images/single_policy_workflow.svg" alt="Single-policy workflow: LLM revision, Python policy, rollout with reset, feedback; then freeze and held-out evaluation. Tasks: bridge plus cylinder, stacking, ring-on-peg." width="3456" height="1094" loading="lazy">
     </figure>
     <figure class="card">
-      <img src="static/images/single_policy_results.svg" alt="Test success rate and cumulative tokens across iterations for bridge plus cylinder, three-cube stacking and ring over peg. Full reaches higher success earlier on the construction tasks and is the only condition to succeed on ring." width="3456" height="1138" loading="lazy">
-      <figcaption>Lines show mean held-out success of training-retained policies; bars show cumulative tokens. On the construction tasks, Full's R2 already beats Base's R3 for about half the tokens. On ring-on-peg, only Full succeeds (38% at R3).</figcaption>
+      <img src="static/images/single_policy_results.svg" alt="Test success rate and cumulative tokens across iterations for bridge plus cylinder, three-cube stacking and ring over peg. Geometric abstraction reaches higher success earlier on the construction tasks and is the only condition to succeed on ring." width="3456" height="1138" loading="lazy">
+      <figcaption>Lines show mean held-out success of training-retained policies; bars show cumulative tokens. On the construction tasks, geometric abstraction at R2 already beats pixel reasoning at R3 for about half the tokens. On ring-on-peg, only geometric abstraction succeeds (38% at R3).</figcaption>
     </figure>
 
     <h3 class="sub" id="online">2&nbsp; Continuous online execution</h3>
@@ -188,27 +188,27 @@
       <img src="static/images/online_workflow.svg" alt="Online workflow: observe, LLM decision, execute action in the same scene with no reset, until success or 200 second timeout. Tasks: bridge-tower, ring-on-peg, relocation." width="3456" height="1094" loading="lazy">
     </figure>
     <figure class="card">
-      <img src="static/images/online_outcomes.svg" alt="Success within 200 seconds, capped completion time and recorded tokens over 50 paired layouts for bridge-tower, ring and relocation. Full succeeds more often on bridge-tower and relocation and finishes ring faster with far fewer tokens." width="3456" height="1138" loading="lazy">
-      <figcaption>Full completes more episodes on Bridge-tower (28/50 vs. 12/50) and Tower relocation (42/50 vs. 15/50). On Ring, both succeed on almost every layout (50/50 vs. 49/50), but Full finishes sooner on 45 of the 50 paired layouts.</figcaption>
+      <img src="static/images/online_outcomes.svg" alt="Success within 200 seconds, capped completion time and recorded tokens over 50 paired layouts for bridge-tower, ring and relocation. Geometric abstraction succeeds more often on bridge-tower and relocation and finishes ring faster with far fewer tokens." width="3456" height="1138" loading="lazy">
+      <figcaption>Geometric abstraction completes more episodes on Bridge-tower (28/50 vs. 12/50) and Tower relocation (42/50 vs. 15/50). On Ring, both succeed on almost every layout (50/50 vs. 49/50), but geometric abstraction finishes sooner on 45 of the 50 paired layouts.</figcaption>
     </figure>
     <figure class="card">
       <img src="static/images/online_cost.svg" alt="Model-request time and recorded tokens per episode, with individual episodes as points." width="3110" height="1210" loading="lazy">
-      <figcaption>Model interaction cost per episode. Full attaches fewer images on all three tasks while local sensing keeps refreshing the geometry.</figcaption>
+      <figcaption>Model interaction cost per episode. Geometric abstraction attaches fewer images on all three tasks while local sensing keeps refreshing the geometry.</figcaption>
     </figure>
 
     <figure class="card timeline" aria-labelledby="timeline-title">
       <p class="timeline-title" id="timeline-title">Inside an average tower-relocation episode</p>
       <div class="legend" aria-hidden="true"><span><i class="tick img"></i>LLM request with image</span><span><i class="tick txt"></i>LLM request, text only</span></div>
       <div class="lane">
-        <div class="lane-label"><b>Base</b><span>186.4 s &middot; 11.6 req &middot; 11.3 img</span></div>
-        <div class="track" role="img" aria-label="Base: about 12 LLM requests, almost all with images, over a mean 186.4 seconds">
+        <div class="lane-label"><b>Pixel reasoning</b><span>186.4 s &middot; 11.6 req &middot; 11.3 img</span></div>
+        <div class="track" role="img" aria-label="Pixel reasoning: about 12 LLM requests, almost all with images, over a mean 186.4 seconds">
           <div class="bar base" style="width:93.2%"></div>
           <i class="tick img" style="left:3.88%"></i><i class="tick img" style="left:11.65%"></i><i class="tick img" style="left:19.42%"></i><i class="tick img" style="left:27.18%"></i><i class="tick img" style="left:34.95%"></i><i class="tick img" style="left:42.72%"></i><i class="tick img" style="left:50.48%"></i><i class="tick img" style="left:58.25%"></i><i class="tick img" style="left:66.02%"></i><i class="tick img" style="left:73.78%"></i><i class="tick img" style="left:81.55%"></i><i class="tick txt" style="left:89.32%"></i>
         </div>
       </div>
       <div class="lane">
-        <div class="lane-label"><b>Full</b><span>139.2 s &middot; 5.4 req &middot; 3.0 img</span></div>
-        <div class="track" role="img" aria-label="Full: about 5 LLM requests, 3 with images, over a mean 139.2 seconds">
+        <div class="lane-label"><b>Geometric abstraction</b><span>139.2 s &middot; 5.4 req &middot; 3.0 img</span></div>
+        <div class="track" role="img" aria-label="Geometric abstraction: about 5 LLM requests, 3 with images, over a mean 139.2 seconds">
           <div class="bar full" style="width:69.6%"></div>
           <i class="tick img" style="left:6.96%"></i><i class="tick txt" style="left:20.88%"></i><i class="tick img" style="left:34.8%"></i><i class="tick txt" style="left:48.72%"></i><i class="tick img" style="left:62.64%"></i>
         </div>
@@ -222,12 +222,12 @@
         <caption>Online outcomes and cost over 50 paired layouts per task (means per episode; timeouts count as 200&nbsp;s)</caption>
         <thead><tr><th>Task</th><th>Agent</th><th>Success</th><th>Time (s)</th><th>Model (s)</th><th>Tokens (k)</th><th>Requests</th><th>Images</th></tr></thead>
         <tbody>
-          <tr><td rowspan="2">Bridge-tower</td><td>Base</td><td>12/50</td><td>198.0</td><td>55.5</td><td>112.5</td><td>7.88</td><td>7.50</td></tr>
-          <tr class="full"><td>Full</td><td>28/50</td><td>185.3</td><td>51.8</td><td>129.5</td><td>7.32</td><td>4.28</td></tr>
-          <tr><td rowspan="2">Ring-on-peg</td><td>Base</td><td>49/50</td><td>115.8</td><td>90.0</td><td>214.5</td><td>11.88</td><td>10.94</td></tr>
-          <tr class="full"><td>Full</td><td>50/50</td><td>77.2</td><td>45.6</td><td>101.3</td><td>6.90</td><td>2.72</td></tr>
-          <tr><td rowspan="2">Tower relocation</td><td>Base</td><td>15/50</td><td>186.4</td><td>80.3</td><td>185.9</td><td>11.58</td><td>11.34</td></tr>
-          <tr class="full"><td>Full</td><td>42/50</td><td>139.2</td><td>31.7</td><td>88.3</td><td>5.36</td><td>3.00</td></tr>
+          <tr><td rowspan="2">Bridge-tower</td><td>Pixel reasoning</td><td>12/50</td><td>198.0</td><td>55.5</td><td>112.5</td><td>7.88</td><td>7.50</td></tr>
+          <tr class="full"><td>Geometric abstraction</td><td>28/50</td><td>185.3</td><td>51.8</td><td>129.5</td><td>7.32</td><td>4.28</td></tr>
+          <tr><td rowspan="2">Ring-on-peg</td><td>Pixel reasoning</td><td>49/50</td><td>115.8</td><td>90.0</td><td>214.5</td><td>11.88</td><td>10.94</td></tr>
+          <tr class="full"><td>Geometric abstraction</td><td>50/50</td><td>77.2</td><td>45.6</td><td>101.3</td><td>6.90</td><td>2.72</td></tr>
+          <tr><td rowspan="2">Tower relocation</td><td>Pixel reasoning</td><td>15/50</td><td>186.4</td><td>80.3</td><td>185.9</td><td>11.58</td><td>11.34</td></tr>
+          <tr class="full"><td>Geometric abstraction</td><td>42/50</td><td>139.2</td><td>31.7</td><td>88.3</td><td>5.36</td><td>3.00</td></tr>
         </tbody>
       </table>
     </div>
