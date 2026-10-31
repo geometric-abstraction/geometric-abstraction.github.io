@@ -198,23 +198,25 @@
 
     <figure class="card timeline" aria-labelledby="timeline-title">
       <p class="timeline-title" id="timeline-title">Inside an average tower-relocation episode</p>
-      <div class="legend" aria-hidden="true"><span><i class="tick img"></i>LLM request with image</span><span><i class="tick txt"></i>LLM request, text only</span></div>
-      <div class="lane">
-        <div class="lane-label"><b>Pixel reasoning</b><span>186.4 s &middot; 11.6 req &middot; 11.3 img</span></div>
-        <div class="track" role="img" aria-label="Pixel reasoning: about 12 LLM requests, almost all with images, over a mean 186.4 seconds">
-          <div class="bar base" style="width:93.2%"></div>
-          <i class="tick img" style="left:0.0%"></i><i class="tick img" style="left:7.77%"></i><i class="tick img" style="left:15.53%"></i><i class="tick img" style="left:23.3%"></i><i class="tick img" style="left:31.07%"></i><i class="tick img" style="left:38.83%"></i><i class="tick img" style="left:46.6%"></i><i class="tick img" style="left:54.37%"></i><i class="tick img" style="left:62.13%"></i><i class="tick img" style="left:69.9%"></i><i class="tick img" style="left:77.67%"></i><i class="tick txt" style="left:85.43%"></i>
+      <div class="legend" aria-hidden="true"><span><i class="pill img"></i>LLM request with image</span><span><i class="pill txt"></i>LLM request, text only</span></div>
+      <div class="tl">
+        <div class="tl-label base">Pixel <br>reasoning</div>
+        <div class="tl-plot base" role="img" aria-label="Pixel reasoning: about 12 LLM requests, almost all with images, over a mean 186.4 seconds">
+          <div class="rail" style="width:93.2%"></div>
+          <i class="pill img" style="left:0.0%"></i><i class="pill img" style="left:7.77%"></i><i class="pill img" style="left:15.53%"></i><i class="pill img" style="left:23.3%"></i><i class="pill img" style="left:31.07%"></i><i class="pill img" style="left:38.83%"></i><i class="pill img" style="left:46.6%"></i><i class="pill img" style="left:54.37%"></i><i class="pill img" style="left:62.13%"></i><i class="pill img" style="left:69.9%"></i><i class="pill img" style="left:77.67%"></i><i class="pill txt" style="left:85.43%"></i>
+          <div class="end" style="left:93.2%"></div>
+          <div class="end-label" style="left:93.2%"><b>186.4&nbsp;s</b><span>11.6 req &middot; 11.3 img</span></div>
         </div>
-      </div>
-      <div class="lane">
-        <div class="lane-label"><b>Geometric abstraction</b><span>139.2 s &middot; 5.4 req &middot; 3.0 img</span></div>
-        <div class="track" role="img" aria-label="Geometric abstraction: about 5 LLM requests, 3 with images, over a mean 139.2 seconds">
-          <div class="bar full" style="width:69.6%"></div>
-          <i class="tick img" style="left:0.0%"></i><i class="tick txt" style="left:13.92%"></i><i class="tick img" style="left:27.84%"></i><i class="tick txt" style="left:41.76%"></i><i class="tick img" style="left:55.68%"></i>
+        <div class="tl-label full">Geometric <br>abstraction</div>
+        <div class="tl-plot full" role="img" aria-label="Geometric abstraction: about 5 LLM requests, 3 with images, over a mean 139.2 seconds">
+          <div class="rail" style="width:69.6%"></div>
+          <i class="pill img" style="left:0.0%"></i><i class="pill txt" style="left:13.92%"></i><i class="pill img" style="left:27.84%"></i><i class="pill txt" style="left:41.76%"></i><i class="pill img" style="left:55.68%"></i>
+          <div class="end" style="left:69.6%"></div>
+          <div class="end-label" style="left:69.6%"><b>139.2&nbsp;s</b><span>5.4 req &middot; 3.0 img</span></div>
         </div>
+        <div class="tl-axis" aria-hidden="true"><span style="left:0%">0 s</span><span style="left:25%">50 s</span><span style="left:50%">100 s</span><span style="left:75%">150 s</span><span style="left:100%">200 s</span></div>
       </div>
-      <div class="axis" aria-hidden="true"><span>0 s</span><span>50 s</span><span>100 s</span><span>150 s</span><span>200 s</span></div>
-      <figcaption>Bars end at mean capped completion time (timeouts = 200&nbsp;s); requests are rounded and evenly spaced from the start of the episode for illustration. Means over 50 episodes per agent.</figcaption>
+      <figcaption>Each line ends at mean capped completion time (timeouts = 200&nbsp;s); requests are rounded and evenly spaced from the start of the episode for illustration. Means over 50 episodes per agent.</figcaption>
     </figure>
 
     <div class="table-wrap">
