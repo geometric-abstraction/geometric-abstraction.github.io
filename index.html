@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Geometric Abstraction for Reasoning and Action</title>
-  <meta name="description" content="Do Agentic Policies Need to Look at Every Step? Geometric abstraction lets robot agents reason and act with fewer model calls and image inputs while keeping visual sensing active. CoRL 2026 Workshop on Agentic Robotics.">
+  <meta name="description" content="Do Agentic Policies Need to Look at Every Step? Shift routine spatial reasoning from images to text and symbols. A 3D geometric abstraction, refreshed locally from RGB-D, gives LLM agents typed, evidence-aware part references and compact metric checkpoints, improving multi-step manipulation completion while cutting repeated multimodal queries. CoRL 2026 Workshop on Agentic Robotics.">
   <meta property="og:title" content="Do Agentic Policies Need to Look at Every Step? Geometric Abstraction for Reasoning and Action">
-  <meta property="og:description" content="Geometric abstraction lets robot agents reason and act with fewer model calls and image inputs while keeping visual sensing active.">
+  <meta property="og:description" content="Shift routine spatial reasoning from images to text and symbols. A 3D geometric abstraction, refreshed locally from RGB-D, gives LLM agents typed, evidence-aware part references and compact metric checkpoints, improving multi-step manipulation completion while cutting repeated multimodal queries.">
   <meta property="og:image" content="https://geometric-abstraction.github.io/static/images/teaser.png">
   <meta property="og:url" content="https://geometric-abstraction.github.io/">
   <meta name="twitter:card" content="summary_large_image">
@@ -68,7 +68,7 @@
       <li class="sub"><a href="#single-policy">Single-policy</a></li>
       <li class="sub"><a href="#online">Online execution</a></li>
       <li><a href="#videos">Rollouts</a></li>
-      <li><a href="#discussion">Takeaways</a></li>
+      <li><a href="#discussion">Limitations</a></li>
       <li><a href="#citation">Citation</a></li>
     </ol>
   </div>
@@ -79,11 +79,11 @@
     <figure class="card">
       <img src="static/images/teaser.svg" alt="Top: repeated visual reasoning sends images to a multimodal LLM at every step. Bottom: with geometric abstraction, visual observations are grounded into geometry exposed as text and symbols such as red.bottom_face and blue.top_face, with evidence status; images are sent only on demand." width="4032" height="1210">
     </figure>
-    <p class="tldr"><strong>TL;DR</strong> Keep the cameras on, but stop making the language model re-read images at every step. We ground RGB-D observations into typed, evidence-aware geometric references and compact textual checkpoints, so robot agents can reason and act with fewer model calls and image inputs.</p>
+    <p class="tldr"><strong>TL;DR</strong> Shift routine spatial reasoning from images to text and symbols. A 3D geometric abstraction, refreshed locally from RGB-D, gives LLM agents typed, evidence-aware part references and compact metric checkpoints, improving multi-step manipulation completion while cutting repeated multimodal queries.</p>
   </section>
 
   <section class="wrap stats" aria-label="Headline results on online ring-on-peg">
-    <p class="stats-label">Online ring-on-peg, geometric abstraction vs. pixel reasoning</p>
+    <p class="stats-label">Online ring-on-peg, Geometric Abstraction vs. Pixel Reasoning</p>
     <div class="stat-row">
       <div class="stat"><span class="num">&minus;33.3%</span><span class="lbl">mean completion time</span></div>
       <div class="stat"><span class="num">&minus;49.4%</span><span class="lbl">model-request time</span></div>
@@ -94,28 +94,28 @@
 
   <section class="wrap prose" id="abstract">
     <h2>Abstract</h2>
-    <p>Recent multimodal language models can reason directly about robot scenes, but it is unclear whether they need to repeatedly reinterpret visual observations throughout an interaction. We explore a simple alternative: maintaining task-relevant 3D information as a geometric abstraction that can be updated from current observations and read directly by the language model. Our prototype represents scene geometry through typed, evidence-aware references to object parts, grounds these references locally from RGB-D, and returns compact textual checkpoints after execution. We study this interface in two settings: policy synthesis across rollouts and continuous online execution. The results suggest that such an abstraction can reduce repeated multimodal interaction while retaining useful spatial information for manipulation. In online ring-on-peg, for example, it reduces mean completion time by 33.3%, model-request time by 49.4%, and recorded tokens by 52.8%. We view these results as preliminary evidence that explicit geometric state is a useful design point for agentic robot policies, and discuss when direct visual reasoning remains necessary.</p>
+    <p>Recent multimodal language models can reason directly about robot scenes, but it is unclear whether they need to repeatedly reinterpret raw visual observations at every step of an interaction. We propose shifting routine spatial reasoning from images to text and symbols through a 3D geometric abstraction that is refreshed locally from observations and read directly by the language models. Specifically, our interface represents scene geometry via typed, evidence-aware symbolic references to object parts, grounds them from calibrated RGB-D, and returns compact textual checkpoints with metric residuals after each action. Symbolic task structure can thus be reused across decisions while metric values are rebound to the current scene, with direct visual reasoning invoked only on demand. Across offline policy synthesis and continuous online execution, reasoning over grounded text and symbols improves multi-step manipulation completion while substantially reducing repeated multimodal queries, positioning explicit geometric state as an effective substrate for agentic robot policies.</p>
   </section>
 
   <section class="wrap" id="method">
     <h2>Method</h2>
     <figure class="card">
       <img src="static/images/method.png" alt="Pipeline: (a) recorded side RGB-D observation, (b) metric geometry with points, edges and faces, (c) text and symbols such as object center and residual to goal, (d) agentic policy that revises policies or chooses actions, with local skill execution." width="3420" height="1440" loading="lazy">
-      <figcaption>RGB-D observations are grounded into object geometry and exposed to the LLM through typed symbolic references and compact textual checkpoints. The same interface serves policy synthesis between rollouts and decisions within a continuing online episode.</figcaption>
+      <figcaption>RGB-D observations are grounded into object geometry and exposed to the LLM through typed symbolic references and compact textual checkpoints. In policy synthesis, the LLM revises executable policies between rollouts while perception and control run locally; in online execution, the same interface supplies updated geometry for successive decisions within a continuing episode.</figcaption>
     </figure>
 
     <div class="pillars">
       <article>
         <h3>Ground locally</h3>
-        <p>Calibrated side and wrist RGB-D are back-projected into the world frame to estimate each object's center, orientation, faces, edges and vertices. All of this runs on the CPU. <em>Shape may persist, but pose must be refreshed</em> from a current observation, never copied from a commanded motion.</p>
+        <p>Calibrated side and wrist RGB-D are back-projected into the world frame to estimate each object's center, orientation, dimensions, vertices, edges and faces, each with a timestamp, using lightweight CPU estimators. <em>Shape may persist, but pose must be refreshed</em>: after an object moves, its pose is re-estimated from a current observation, never copied from a commanded motion.</p>
       </article>
       <article>
         <h3>Reference symbolically</h3>
-        <p>Policies refer to typed parts like <code>red.bottom_face</code> and <code>blue.top_face</code>. Every value carries its evidence status: <span class="tag obs">observed</span> <span class="tag inf">inferred</span> <span class="tag una">unavailable</span>. The same program rebinds to new scenes.</p>
+        <p>Policies refer to typed parts like <code>red.bottom_face</code> and <code>blue.top_face</code> and compose them with operators such as surface alignment and support checks. Every value carries its evidence status: <span class="tag obs">observed</span> <span class="tag inf">inferred</span> <span class="tag una">unavailable</span>. The same program rebinds to new scenes.</p>
       </article>
       <article>
         <h3>Checkpoint in text</h3>
-        <p>After each action the agent receives a compact checkpoint with the current geometry, its evidence, and the residual to the goal. Images stay available on demand when the geometry cannot explain a failure.</p>
+        <p>After each action the agent receives a compact checkpoint with the updated 3D coordinates, evidence status and metric residual to the goal. If an object is occluded, the residual is marked unavailable rather than computed from a stale estimate. Images stay available on demand.</p>
       </article>
     </div>
 
@@ -140,75 +140,75 @@
     <div class="task-grid">
       <figure class="task">
         <div class="pair"><img src="static/images/tasks/bridge_start.jpg" alt="Bridge + cylinder start: blue and yellow cubes, green beam and red cylinder scattered on the table" width="498" height="374" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/bridge_goal.jpg" alt="Bridge + cylinder goal: green beam spans the two cubes with the red cylinder standing on top" width="499" height="373" loading="lazy"></div>
-        <figcaption>Bridge + cylinder</figcaption>
+        <figcaption>Bridge + cylinder<small>Place two base blocks, span them with a beam, and stand a cylinder on top.</small></figcaption>
       </figure>
       <figure class="task">
         <div class="pair"><img src="static/images/tasks/stacking_start.jpg" alt="Stacking start: blue, green and red cubes apart" width="498" height="374" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/stacking_goal.jpg" alt="Stacking goal: blue, red, green cubes stacked in order" width="499" height="373" loading="lazy"></div>
-        <figcaption>Three-cube stacking</figcaption>
+        <figcaption>Three-cube stacking<small>Build a three-cube tower in a prescribed color order.</small></figcaption>
       </figure>
       <figure class="task">
         <div class="pair"><img src="static/images/tasks/ring_single_start.jpg" alt="Ring-on-peg start: yellow hexagonal ring and blue peg" width="498" height="374" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/ring_single_goal.jpg" alt="Ring-on-peg goal: ring placed over the peg" width="499" height="373" loading="lazy"></div>
-        <figcaption>Ring-on-peg</figcaption>
+        <figcaption>Ring-on-peg<small>Grasp a hexagonal ring and thread it onto a vertical peg.</small></figcaption>
       </figure>
     </div>
     <p class="group-label">Continuous online execution</p>
     <div class="task-grid">
       <figure class="task">
         <div class="pair"><img src="static/images/tasks/bridge_tower_start.jpg" alt="Bridge-tower start: five cubes and a yellow beam scattered" width="499" height="373" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/bridge_tower_goal.jpg" alt="Bridge-tower goal: beam across two cubes with two cubes stacked on top" width="499" height="373" loading="lazy"></div>
-        <figcaption>Bridge-tower</figcaption>
+        <figcaption>Bridge-tower<small>Build a bridge, then stack two cubes on the beam.</small></figcaption>
       </figure>
       <figure class="task">
         <div class="pair"><img src="static/images/tasks/ring_online_start.jpg" alt="Online ring-on-peg start: ring held above the table after the shared lift, next to the peg" width="499" height="373" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/ring_online_goal.jpg" alt="Online ring-on-peg goal: ring released over the peg" width="499" height="373" loading="lazy"></div>
-        <figcaption>Ring-on-peg <span>(after shared lift)</span></figcaption>
+        <figcaption>Ring-on-peg <span>(after shared lift)</span><small>Align a pre-lifted ring over the peg and release it.</small></figcaption>
       </figure>
       <figure class="task">
         <div class="pair"><img src="static/images/tasks/relocation_start.jpg" alt="Tower relocation start: a red, blue, green column beside a yellow foundation cube" width="499" height="373" loading="lazy"><span class="arrow" aria-hidden="true">&rarr;</span><img src="static/images/tasks/relocation_goal.jpg" alt="Tower relocation goal: blue and green cubes moved onto the yellow foundation in order" width="499" height="373" loading="lazy"></div>
-        <figcaption>Tower relocation</figcaption>
+        <figcaption>Tower relocation<small>Move the upper two cubes of a column onto a new foundation, keeping their order and both foundations in place.</small></figcaption>
       </figure>
     </div>
   </section>
 
   <section class="wrap" id="results">
     <h2>Experiments</h2>
-    <p class="lede">A simulated SO-100 arm with calibrated side and wrist RGB-D cameras. The <strong>pixel reasoning</strong> and <strong>geometric abstraction</strong> agents share the task specification, sensors, actuator and initial skills. Pixel reasoning works from the camera images; geometric abstraction additionally receives grounded geometric references and textual checkpoints. Neither ever sees simulator object poses or evaluator state.</p>
+    <p class="lede">A simulated SO-100 arm with calibrated side and wrist RGB-D cameras. We compare a <strong>Pixel Reasoning</strong> agent that reasons directly from visual observations with a <strong>Geometric Abstraction</strong> agent that additionally receives our grounded geometric references and textual checkpoints. Both share the task specification, sensor access, actuator interface and initial skills; neither ever sees simulator object poses or private evaluator state.</p>
 
     <h3 class="sub" id="single-policy">1&nbsp; Single-policy acquisition</h3>
-    <p>The LLM revises an executable Python policy between reset rollouts (R0&ndash;R3), with no LLM calls during execution. There are five paired chains per task, and every revision is tested on the same 100 held-out layouts.</p>
+    <p>The LLM (gpt-6-astra, high reasoning effort) revises an executable Python policy between reset rollouts: an observation-only scaffold (R0), then three revisions (R1&ndash;R3), with no LLM calls during execution. Five paired chains per task train on five shared layouts; a revision is kept only if it solves every previously solved layout plus one more. After training freezes, every retained version is tested on 100 shared held-out layouts.</p>
     <figure class="card">
       <img src="static/images/single_policy_workflow.svg" alt="Single-policy workflow: LLM revision, Python policy, rollout with reset, feedback; then freeze and held-out evaluation. Tasks: bridge plus cylinder, stacking, ring-on-peg." width="3456" height="1094" loading="lazy">
     </figure>
     <figure class="card">
-      <img src="static/images/single_policy_results.svg" alt="Test success rate and cumulative tokens across iterations for bridge plus cylinder, three-cube stacking and ring over peg. Geometric abstraction reaches higher success earlier on the construction tasks and is the only condition to succeed on ring." width="3456" height="1138" loading="lazy">
-      <figcaption>Lines show mean held-out success of training-retained policies; bars show cumulative tokens. On the construction tasks, geometric abstraction at R2 already beats pixel reasoning at R3 for about half the tokens. On ring-on-peg, only geometric abstraction succeeds (38% at R3).</figcaption>
+      <img src="static/images/single_policy_results.svg" alt="Test success rate and cumulative tokens across iterations for bridge plus cylinder, three-cube stacking and ring over peg. Geometric Abstraction reaches higher success earlier on the construction tasks and is the only condition to succeed on ring." width="3456" height="1138" loading="lazy">
+      <figcaption>Geometric abstraction substantially accelerates policy acquisition. At R1 it reaches 45.2% held-out success on Bridge + cylinder (vs. 21.2%) and 57.2% on stacking (vs. 17.2%). By R2 it already surpasses Pixel Reasoning&rsquo;s final R3 on both tasks with roughly half the cumulative tokens (67.3k vs. 125.7k; 64.7k vs. 138.1k). On Ring-on-peg, only Geometric Abstraction acquires a working policy within budget (38.0% vs. 0.0% at R3).</figcaption>
     </figure>
 
     <h3 class="sub" id="online">2&nbsp; Continuous online execution</h3>
-    <p>The agent observes, reasons and acts in one continuing scene until it succeeds or hits a 200&nbsp;s budget. Failed actions leave their consequences in place, and physics keeps running while the model thinks. We evaluate 50 paired layouts per task (300 episodes).</p>
+    <p>The LLM (gpt-6-astra, medium reasoning effort) orchestrates shared prior skills in one continuing scene until it succeeds or hits a 200&nbsp;s wall-clock budget. Failed actions are not reset, and physics keeps running while the model thinks, so waiting costs the same budget as acting. Both agents can request images and depth samples on demand. We evaluate 50 paired layouts per task (300 episodes).</p>
     <figure class="card">
       <img src="static/images/online_workflow.svg" alt="Online workflow: observe, LLM decision, execute action in the same scene with no reset, until success or 200 second timeout. Tasks: bridge-tower, ring-on-peg, relocation." width="3456" height="1094" loading="lazy">
     </figure>
     <figure class="card">
-      <img src="static/images/online_outcomes.svg" alt="Success within 200 seconds, capped completion time and recorded tokens over 50 paired layouts for bridge-tower, ring and relocation. Geometric abstraction succeeds more often on bridge-tower and relocation and finishes ring faster with far fewer tokens." width="3456" height="1138" loading="lazy">
-      <figcaption>Geometric abstraction completes more episodes on Bridge-tower (28/50 vs. 12/50) and Tower relocation (42/50 vs. 15/50). On Ring, both succeed on almost every layout (50/50 vs. 49/50), but geometric abstraction finishes sooner on 45 of the 50 paired layouts.</figcaption>
+      <img src="static/images/online_outcomes.svg" alt="Success within 200 seconds, capped completion time and recorded tokens over 50 paired layouts for bridge-tower, ring and relocation. Geometric Abstraction succeeds more often on bridge-tower and relocation and finishes ring faster with far fewer tokens." width="3456" height="1138" loading="lazy">
+      <figcaption>Geometric Abstraction solves Bridge-tower on 28/50 layouts (56% vs. 24%) and Tower relocation on 42/50 (84% vs. 30%), with lower mean completion times. On Ring-on-peg, where both reliably succeed (50/50 vs. 49/50), it finishes 33.3% faster (77.2&nbsp;s vs. 115.8&nbsp;s), earlier on 45 of 50 pairs.</figcaption>
     </figure>
     <figure class="card">
       <img src="static/images/online_cost.svg" alt="Model-request time and recorded tokens per episode, with individual episodes as points." width="3110" height="1210" loading="lazy">
-      <figcaption>Model interaction cost per episode. Geometric abstraction attaches fewer images on all three tasks while local sensing keeps refreshing the geometry.</figcaption>
+      <figcaption>Model interaction cost per episode. On Ring-on-peg, model-request time drops 49.4% and recorded tokens 52.8%; on Tower relocation, 60.5% and 52.5%, with similar physical execution time. On Bridge-tower, Geometric Abstraction more than doubles completion with 6.7% less model time and 15.1% more tokens.</figcaption>
     </figure>
 
     <figure class="card timeline" aria-labelledby="timeline-title">
       <p class="timeline-title" id="timeline-title">Inside an average tower-relocation episode</p>
       <div class="legend" aria-hidden="true"><span><i class="pill img"></i>LLM request with image</span><span><i class="pill txt"></i>LLM request, text only</span></div>
       <div class="tl">
-        <div class="tl-label base">Pixel <br>reasoning</div>
-        <div class="tl-plot base" role="img" aria-label="Pixel reasoning: about 12 LLM requests, almost all with images, over a mean 186.4 seconds">
+        <div class="tl-label base">Pixel <br>Reasoning</div>
+        <div class="tl-plot base" role="img" aria-label="Pixel Reasoning: about 12 LLM requests, almost all with images, over a mean 186.4 seconds">
           <div class="rail" style="width:93.2%"></div>
           <i class="pill img" style="left:0.0%"></i><i class="pill img" style="left:7.77%"></i><i class="pill img" style="left:15.53%"></i><i class="pill img" style="left:23.3%"></i><i class="pill img" style="left:31.07%"></i><i class="pill img" style="left:38.83%"></i><i class="pill img" style="left:46.6%"></i><i class="pill img" style="left:54.37%"></i><i class="pill img" style="left:62.13%"></i><i class="pill img" style="left:69.9%"></i><i class="pill img" style="left:77.67%"></i><i class="pill txt" style="left:85.43%"></i>
           <div class="end" style="left:93.2%"></div>
           <div class="end-label" style="left:93.2%"><b>186.4&nbsp;s</b><span>11.6 req &middot; 11.3 img</span></div>
         </div>
-        <div class="tl-label full">Geometric <br>abstraction</div>
-        <div class="tl-plot full" role="img" aria-label="Geometric abstraction: about 5 LLM requests, 3 with images, over a mean 139.2 seconds">
+        <div class="tl-label full">Geometric <br>Abstraction</div>
+        <div class="tl-plot full" role="img" aria-label="Geometric Abstraction: about 5 LLM requests, 3 with images, over a mean 139.2 seconds">
           <div class="rail" style="width:69.6%"></div>
           <i class="pill img" style="left:0.0%"></i><i class="pill txt" style="left:13.92%"></i><i class="pill img" style="left:27.84%"></i><i class="pill txt" style="left:41.76%"></i><i class="pill img" style="left:55.68%"></i>
           <div class="end" style="left:69.6%"></div>
@@ -224,12 +224,12 @@
         <caption>Online outcomes and cost over 50 paired layouts per task (means per episode; timeouts count as 200&nbsp;s)</caption>
         <thead><tr><th>Task</th><th>Agent</th><th>Success</th><th>Time (s)</th><th>Model (s)</th><th>Tokens (k)</th><th>Requests</th><th>Images</th></tr></thead>
         <tbody>
-          <tr><td rowspan="2">Bridge-tower</td><td>Pixel reasoning</td><td>12/50</td><td>198.0</td><td>55.5</td><td>112.5</td><td>7.88</td><td>7.50</td></tr>
-          <tr class="full"><td>Geometric abstraction</td><td class="best">28/50</td><td class="best">185.3</td><td class="best">51.8</td><td>129.5</td><td class="best">7.32</td><td class="best">4.28</td></tr>
-          <tr><td rowspan="2">Ring-on-peg</td><td>Pixel reasoning</td><td>49/50</td><td>115.8</td><td>90.0</td><td>214.5</td><td>11.88</td><td>10.94</td></tr>
-          <tr class="full"><td>Geometric abstraction</td><td class="best">50/50</td><td class="best">77.2</td><td class="best">45.6</td><td class="best">101.3</td><td class="best">6.90</td><td class="best">2.72</td></tr>
-          <tr><td rowspan="2">Tower relocation</td><td>Pixel reasoning</td><td>15/50</td><td>186.4</td><td>80.3</td><td>185.9</td><td>11.58</td><td>11.34</td></tr>
-          <tr class="full"><td>Geometric abstraction</td><td class="best">42/50</td><td class="best">139.2</td><td class="best">31.7</td><td class="best">88.3</td><td class="best">5.36</td><td class="best">3.00</td></tr>
+          <tr><td rowspan="2">Bridge-tower</td><td>Pixel Reasoning</td><td>12/50</td><td>198.0</td><td>55.5</td><td>112.5</td><td>7.88</td><td>7.50</td></tr>
+          <tr class="full"><td>Geometric Abstraction</td><td class="best">28/50</td><td class="best">185.3</td><td class="best">51.8</td><td>129.5</td><td class="best">7.32</td><td class="best">4.28</td></tr>
+          <tr><td rowspan="2">Ring-on-peg</td><td>Pixel Reasoning</td><td>49/50</td><td>115.8</td><td>90.0</td><td>214.5</td><td>11.88</td><td>10.94</td></tr>
+          <tr class="full"><td>Geometric Abstraction</td><td class="best">50/50</td><td class="best">77.2</td><td class="best">45.6</td><td class="best">101.3</td><td class="best">6.90</td><td class="best">2.72</td></tr>
+          <tr><td rowspan="2">Tower relocation</td><td>Pixel Reasoning</td><td>15/50</td><td>186.4</td><td>80.3</td><td>185.9</td><td>11.58</td><td>11.34</td></tr>
+          <tr class="full"><td>Geometric Abstraction</td><td class="best">42/50</td><td class="best">139.2</td><td class="best">31.7</td><td class="best">88.3</td><td class="best">5.36</td><td class="best">3.00</td></tr>
         </tbody>
       </table>
     </div>
@@ -253,12 +253,12 @@
   </section>
 
   <section class="wrap prose" id="discussion">
-    <h2>Takeaways and limitations</h2>
+    <h2>Limitations and discussion</h2>
     <ul>
-      <li><strong>Vision stays on, re-reading goes down.</strong> Local perception keeps the geometric state current, so the language model rarely needs a fresh image to decide.</li>
-      <li><strong>Gains are task-dependent.</strong> Ring and Tower relocation roughly halve model time and tokens. Bridge-tower's higher success comes with 15.1% more tokens, so better completion does not require token savings on every task.</li>
-      <li><strong>Scope is preliminary.</strong> These are simulated tasks with relatively simple object geometry. Real-world depth noise, occlusion and calibration error remain open, and we compare the full geometry-plus-feedback package rather than isolating its parts.</li>
-      <li><strong>Looking ahead.</strong> Exposing grounded geometry as text could let fast text-only LLMs reason about physical scenes, and open a cleaner way to measure LLM spatial reasoning on verified geometric inputs.</li>
+      <li><strong>Simulation only, so far.</strong> We evaluate simulated table-top manipulation with regular object geometries. Real-world deployment is the essential next step, to test robustness to sensor noise, heavy occlusion and camera calibration drift.</li>
+      <li><strong>Lightweight perception by design.</strong> CPU geometric estimators keep local grounding fast and self-contained; learned 3D perception and articulated or deformable objects are left for future work.</li>
+      <li><strong>Actionable state, not just shorter prompts.</strong> Online, geometric abstraction reduced decision rounds and image attachments across tasks. Its main benefit is direct, actionable spatial state throughout the reasoning&ndash;action loop. More concise checkpoints and learned symbolic abstractions could cut overhead further, and VLM-assisted shape initialization could cover novel objects if its one-time cost is amortized.</li>
+      <li><strong>Toward text-only robot reasoning.</strong> Decoupling local visual grounding from high-level reasoning opens the door to fast text-only language models, and to evaluating spatial reasoning on standardized geometric checkpoints.</li>
     </ul>
   </section>
 
